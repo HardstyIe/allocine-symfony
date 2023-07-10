@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <a href="{{ path('app_entreprise_add') }}" class="btn btn-primary">Ajouter une entreprise</a>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Nom de l'entreprise</th>
+            <th>Actions</th>
+        </tr>
+        {% for entreprise in entreprises %}
+            <tr>
+                <td>{{ entreprise.id }}</td>
+                <td>{{ entreprise.name }}</td>
+                <td><a href="{{ path('app_entreprise_delete',{id:entreprise.id}) }}">Supprimer</a></td>
+            </tr>
+        {% else %}
+            <div>Aucune entreprises trouvée</div>
+        {% endfor %}
+    </table>
+{% endblock %}
