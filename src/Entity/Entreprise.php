@@ -21,9 +21,13 @@ class Entreprise
     #[ORM\OneToMany(mappedBy: 'entreprise', targetEntity: Console::class, orphanRemoval: true)]
     private Collection $consoles;
 
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'entreprises')]
+    private Collection $games;
+
     public function __construct()
     {
         $this->consoles = new ArrayCollection();
+        $this->games = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,6 +80,33 @@ class Entreprise
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addEntreprise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removeEntreprise($this);
+        }
+
+        return $this;
     }
 
 

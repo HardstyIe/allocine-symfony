@@ -4,7 +4,9 @@
 
 {% block body %}
     <h1>Console</h1>
-
+    {% if(app.user and is_granted('ROLE_USER') and console not in app.user.consoles)  %}
+    <a href="{{ path('app_consoles_collection', {'id':console.id}) }}">Ajouter à mes Consoles</a>
+    {% endif %}
     <table class="table">
         <tbody>
             <tr>

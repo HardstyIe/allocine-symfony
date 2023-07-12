@@ -1,22 +1,29 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('app_console_index') }}">Navbar</a>
+        <a class="navbar-brand" href="{{ path('app_home') }}">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ path('app_console_index') }}">Consoles</a>
+                    <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
                 </li>
-                {% if(is_granted('ROLE_ADMIN')) %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_console_index') }}">Consoles</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_pays_index') }}">Pays</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_entreprise_index') }}">Entreprises</a>
                 </li>
-                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_genre_index') }}">Genre</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_game_index') }}">Jeux</a>
+                </li>
             </ul>
         </div>
     </div>

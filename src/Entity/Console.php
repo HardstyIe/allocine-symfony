@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ConsoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -33,6 +35,18 @@ class Console
     #[ORM\ManyToOne(inversedBy: 'consoles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Pays $pays = null;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'consoles')]
+    private Collection $games;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'consoles')]
+    private Collection $users;
+
+    public function __construct()
+    {
+        $this->games = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,6 +121,64 @@ class Console
     public function setPays(?Pays $pays): static
     {
         $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addConsole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removeConsole($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->name." (".$this->picto.")";
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addConsole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeConsole($this);
+        }
 
         return $this;
     }

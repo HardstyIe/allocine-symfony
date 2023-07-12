@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game index{% endblock %}
+
+{% block body %}
+    <h1>Game index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>IsEnable</th>
+                <th>Picture</th>
+                <th>LaunchDate</th>
+                <th>IsOnline</th>
+                <th>IsMultiplayer</th>
+                <th>MinPlayerOffline</th>
+                <th>MaxPlayerOffline</th>
+                <th>MinPlayerOnline</th>
+                <th>MaxPlayerOnline</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for game in games %}
+            <tr>
+                <td>{{ game.id }}</td>
+                <td>{{ game.name }}</td>
+                <td>{{ game.price }}</td>
+                <td>{{ game.isEnable ? 'Yes' : 'No' }}</td>
+                <td>{{ game.picture }}</td>
+                <td>{{ game.launchDate ? game.launchDate|date('Y-m-d') : '' }}</td>
+                <td>{{ game.isOnline ? 'Yes' : 'No' }}</td>
+                <td>{{ game.isMultiplayer ? 'Yes' : 'No' }}</td>
+                <td>{{ game.minPlayerOffline }}</td>
+                <td>{{ game.maxPlayerOffline }}</td>
+                <td>{{ game.minPlayerOnline }}</td>
+                <td>{{ game.maxPlayerOnline }}</td>
+                <td>
+                    <a href="{{ path('app_game_show', {'id': game.id}) }}">show</a>
+                    <a href="{{ path('app_game_edit', {'id': game.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_game_new') }}">Create new</a>
+{% endblock %}

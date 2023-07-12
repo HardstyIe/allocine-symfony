@@ -22,7 +22,7 @@
                 <td>{{ console.id }}</td>
                 <td>{{ console.name }}</td>
                 <td>{{ console.picto }}</td>
-                <td>{{ console.launchDate ? console.launchDate|date('Y-m-d') : '' }}</td>
+                <td>{{ console.launchDate ? console.launchDate|date('d/m/Y') : '' }}</td>
                 <td>{{ console.price }}</td>
                 <td>
                     <a href="{{ path('app_console_show', {'id': console.id}) }}">show</a>

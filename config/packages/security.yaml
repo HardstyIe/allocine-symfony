@@ -32,6 +32,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/pays/[0-9a-z]+, roles: ROLE_ADMIN }
+         - { path: ^/collection/, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

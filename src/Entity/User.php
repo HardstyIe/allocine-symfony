@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -37,6 +39,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilPicture = null;
+
+    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'users')]
+    private Collection $games;
+
+    #[ORM\ManyToMany(targetEntity: Console::class, inversedBy: 'users')]
+    private Collection $consoles;
+
+    public function __construct()
+    {
+        $this->games = new ArrayCollection();
+        $this->consoles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -140,6 +154,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilPicture(?string $profilPicture): static
     {
         $this->profilPicture = $profilPicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGames(): Collection
+    {
+        return $this->games;
+    }
+
+    public function addGame(Game $game): static
+    {
+        if (!$this->games->contains($game)) {
+            $this->games->add($game);
+            $game->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(Game $game): static
+    {
+        if ($this->games->removeElement($game)) {
+            $game->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Console>
+     */
+    public function getConsoles(): Collection
+    {
+        return $this->consoles;
+    }
+
+    public function addConsole(Console $console): static
+    {
+        if (!$this->consoles->contains($console)) {
+            $this->consoles->add($console);
+        }
+
+        return $this;
+    }
+
+    public function removeConsole(Console $console): static
+    {
+        $this->consoles->removeElement($console);
 
         return $this;
     }
