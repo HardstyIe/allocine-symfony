@@ -11,73 +11,6 @@
     {{ include('home/search.html.twig') }}
   </form>
 
-
-    <div>
-      <h1>Liste des Acteurs</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for actor in actors %}
-            <tr>
-                <td>{{ actor.id }}</td>
-                <td>{{ actor.firstName }}</td>
-                <td>{{ actor.lastName }}</td>
-                <td>
-                    <a href="{{ path('app_actor_show', {'id': actor.id}) }}">Voir</a>
-                    <a href="{{ path('app_actor_edit', {'id': actor.id}) }}">Modifiez</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Pas d'Acteurs trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_actor_new') }}">Enregistez un nouvelle Acteur</a>
-    </div>
-
-    <div>
-      <h1>Liste des Catégories</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for category in categories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.name }}</td>
-                <td>
-                    <a href="{{ path('app_category_show', {'id': category.id}) }}">Voir</a>
-                    <a href="{{ path('app_category_edit', {'id': category.id}) }}">Modifiez</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Pas de Catégories trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_category_new') }}">Enregistez un nouvelle Catégorie</a>
-    </div>
-
     <div>
       <h1>Liste des Films</h1>
 
@@ -116,41 +49,7 @@
     </table>
 
     <a href="{{ path('app_movie_new') }}">Enregistez un nouveau Film</a>
-    </div>
-
-    <div>
-      <h1>Liste des Réalisateurs</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for realisator in realisators %}
-            <tr>
-                <td>{{ realisator.id }}</td>
-                <td>{{ realisator.firstName }}</td>
-                <td>{{ realisator.lastName }}</td>
-                <td>
-                    <a href="{{ path('app_realisator_show', {'id': realisator.id}) }}">Voir</a>
-                    <a href="{{ path('app_realisator_edit', {'id': realisator.id}) }}">Modifiez</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Pas de Réalisateurs trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-
-    </table>
-
-    <a href="{{ path('app_realisator_new') }}">Enregistez un nouveau Réalisateurs</a>
+    
 
     </div>
 
