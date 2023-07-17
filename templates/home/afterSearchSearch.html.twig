@@ -4,21 +4,21 @@
         <!-- Ajoutez ici le champ pour les acteurs -->
         <select name="actorIds">
             <option value="">Tous les acteurs</option>
-            {% for actor in actors %}
+            {% for actor in allActors %}
                 <option value="{{ actor.id }}">{{ actor.firstName }} {{ actor.lastName }}</option>
             {% endfor %}
         </select>
         <!-- Ajoutez ici le champ pour les réalisateurs -->
         <select name="realisatorIds">
             <option value="">Tous les réalisateurs</option>
-            {% for realisator in realisators %}
+            {% for realisator in allRealisators %}
                 <option value="{{ realisator.id }}">{{ realisator.firstName }} {{ realisator.lastName }}</option>
             {% endfor %}
         </select>
         <!-- Ajoutez ici le champ pour les catégories -->
         <select name="categoryIds">
             <option value="">Toutes les catégories</option>
-            {% for category in categories %}
+            {% for category in allCategories %}
                 <option value="{{ category.id }}">{{ category.name }}</option>
             {% endfor %}
         </select>

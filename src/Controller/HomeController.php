@@ -32,26 +32,26 @@ class HomeController extends AbstractController
     ]);
   }
 
-  #[Route('/home/search', name: 'app_search_movie')]
+
+
+  #[Route('/movie/search', name: 'app_search_movie')]
   public function search(Request $request, MovieRepository $movieRepository, ActorRepository $actorRepository, RealisatorRepository $realisatorRepository, CategoryRepository $categoryRepository)
   {
-    // Récupérer les critères de recherche à partir de la requête
     $query = $request->query->get('query');
-    $actorIds = $request->query->get('actorIds');
-    $realisatorIds = $request->query->get('realisatorIds');
-    $categoryIds = $request->query->get('categoryIds');
+    $actorIdsString = $request->query->get('actorIds');
+    $realisatorIdsString = $request->query->get('realisatorIds');
+    $categoryIdsString = $request->query->get('categoryIds');
 
-
-    // Récupérer les acteurs, réalisateurs et catégories correspondants aux IDs
-    $actors = $actorIds ? $actorRepository->findBy(['id' => $actorIds]) : [];
-    $realisators = $realisatorIds ? $realisatorRepository->findBy(['id' => $realisatorIds]) : [];
-    $categories = $categoryIds ? $categoryRepository->findBy(['id' => $categoryIds]) : [];
+    // Convertir les strings en tableaux
+    $actorIds = $actorIdsString ? explode(',', $actorIdsString) : [];
+    $realisatorIds = $realisatorIdsString ? explode(',', $realisatorIdsString) : [];
+    $categoryIds = $categoryIdsString ? explode(',', $categoryIdsString) : [];
 
     // Faire la recherche en fonction des critères spécifiés
-    $movies = $movieRepository->search($query, $actors, $realisators, $categories);
+    $movies = $movieRepository->search($query, $actorIds, $realisatorIds, $categoryIds);
 
     // Passer les données au template (la vue)
-    return $this->render('home/index.html.twig', [
+    return $this->render('home/afterSearchIndex.html.twig', [
       'movies' => $movies,
       'allActors' => $actorRepository->findAll(),
       'allRealisators' => $realisatorRepository->findAll(),

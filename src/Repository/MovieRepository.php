@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,49 +39,41 @@ class MovieRepository extends ServiceEntityRepository
     }
   }
 
-  public function search($query, $actors, $realisators, $categories)
+  public function search(string $query, array $actorIds, array $realisatorIds, array $categoryIds)
   {
-    $qb = $this->createQueryBuilder('m');
+    $queryBuilder = $this->createQueryBuilder('m');
 
-    // Recherche par titre
+    // Filtre par titre si le critère de recherche est spécifié
     if ($query) {
-      $qb->andWhere($qb->expr()->like('m.title', ':query'))
+      $queryBuilder
+        ->andWhere('m.title LIKE :query')
         ->setParameter('query', '%' . $query . '%');
     }
 
-    // Recherche par acteurs
-    if ($actors) {
-      $orX = new Orx();
-      foreach ($actors as $index => $actor) {
-        $paramName = 'actor_' . $index;
-        $orX->add($qb->expr()->isMemberOf(':' . $paramName, 'm.actors'));
-        $qb->setParameter($paramName, $actor);
-      }
-      $qb->andWhere($orX);
+    // Filtre par acteurs s'il y a des IDs d'acteurs spécifiés
+    if ($actorIds) {
+      $queryBuilder
+        ->join('m.actors', 'a')
+        ->andWhere('a.id IN (:actorIds)')
+        ->setParameter('actorIds', $actorIds);
     }
 
-    // Recherche par réalisateurs
-    if ($realisators) {
-      $orX = new Orx();
-      foreach ($realisators as $index => $realisator) {
-        $paramName = 'realisator_' . $index;
-        $orX->add($qb->expr()->isMemberOf(':' . $paramName, 'm.realisators'));
-        $qb->setParameter($paramName, $realisator);
-      }
-      $qb->andWhere($orX);
+    // Filtre par réalisateurs s'il y a des IDs de réalisateurs spécifiés
+    if ($realisatorIds) {
+      $queryBuilder
+        ->join('m.realisators', 'r')
+        ->andWhere('r.id IN (:realisatorIds)')
+        ->setParameter('realisatorIds', $realisatorIds);
     }
 
-    // Recherche par catégories
-    if ($categories) {
-      $orX = new Orx();
-      foreach ($categories as $index => $category) {
-        $paramName = 'category_' . $index;
-        $orX->add($qb->expr()->isMemberOf(':' . $paramName, 'm.categories'));
-        $qb->setParameter($paramName, $category);
-      }
-      $qb->andWhere($orX);
+    // Filtre par catégories s'il y a des IDs de catégories spécifiés
+    if ($categoryIds) {
+      $queryBuilder
+        ->join('m.categories', 'c')
+        ->andWhere('c.id IN (:categoryIds)')
+        ->setParameter('categoryIds', $categoryIds);
     }
 
-    return $qb->getQuery()->getResult();
+    return $queryBuilder->getQuery()->getResult();
   }
 }
