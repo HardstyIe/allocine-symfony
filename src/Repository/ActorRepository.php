@@ -39,6 +39,11 @@ class ActorRepository extends ServiceEntityRepository
     }
   }
 
+  public function findByIds(array $ids): array
+  {
+    return $this->findBy(['id' => $ids]);
+  }
+
   //    /**
   //     * @return Actor[] Returns an array of Actor objects
   //     */

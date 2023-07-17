@@ -39,6 +39,11 @@ class RealisatorRepository extends ServiceEntityRepository
     }
   }
 
+  public function findByIds(array $ids): array
+  {
+    return $this->findBy(['id' => $ids]);
+  }
+
   /**
    * @return Realisator[] Returns an array of Realisator objects
    */

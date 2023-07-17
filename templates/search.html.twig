@@ -2,21 +2,21 @@
     <div>
         <input type="text" name="query" placeholder="Rechercher par titre">
         <!-- Ajoutez ici le champ pour les acteurs -->
-        <select name="actors">
+        <select name="actorIds">
             <option value="">Tous les acteurs</option>
             {% for actor in actors %}
                 <option value="{{ actor.id }}">{{ actor.firstName }} {{ actor.lastName }}</option>
             {% endfor %}
         </select>
         <!-- Ajoutez ici le champ pour les réalisateurs -->
-        <select name="realisator">
+        <select name="realisatorIds">
             <option value="">Tous les réalisateurs</option>
             {% for realisator in realisators %}
                 <option value="{{ realisator.id }}">{{ realisator.firstName }} {{ realisator.lastName }}</option>
             {% endfor %}
         </select>
         <!-- Ajoutez ici le champ pour les catégories -->
-        <select name="categories">
+        <select name="categoryIds">
             <option value="">Toutes les catégories</option>
             {% for category in categories %}
                 <option value="{{ category.id }}">{{ category.name }}</option>

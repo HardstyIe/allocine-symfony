@@ -39,6 +39,11 @@ class CategoryRepository extends ServiceEntityRepository
     }
   }
 
+  public function findByIds(array $ids): array
+  {
+    return $this->findBy(['id' => $ids]);
+  }
+
   /**
    * @return Category[] Returns an array of Category objects
    */

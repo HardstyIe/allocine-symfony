@@ -37,9 +37,10 @@ class HomeController extends AbstractController
   {
     // Récupérer les critères de recherche à partir de la requête
     $query = $request->query->get('query');
-    $actorIds = $request->query->get('actors');
-    $realisatorIds = $request->query->get('realisators');
-    $categoryIds = $request->query->get('categories');
+    $actorIds = $request->query->get('actorIds');
+    $realisatorIds = $request->query->get('realisatorIds');
+    $categoryIds = $request->query->get('categoryIds');
+
 
     // Récupérer les acteurs, réalisateurs et catégories correspondants aux IDs
     $actors = $actorIds ? $actorRepository->findBy(['id' => $actorIds]) : [];
