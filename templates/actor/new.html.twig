@@ -3,9 +3,16 @@
 {% block title %}Nouvelle Acteur{% endblock %}
 
 {% block body %}
+  {% if app.user %}
+    
     <h1>Créez un nouvelle Acteur</h1>
 
     {{ include('actor/_form.html.twig') }}
 
     <a href="{{ path('app_actor_index') }}">Retour a la liste des Acteurs</a>
+  {% else %}
+    <div class="text-center">
+      <a href="{{ path('app_login') }}">Connectez-vous</a> ou <a href="{{ path('app_register') }}">Inscrivez-vous</a>
+      </div>
+    {% endif %}
 {% endblock %}

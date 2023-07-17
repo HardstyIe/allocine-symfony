@@ -32,10 +32,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
    * @var string The hashed password
    */
   #[ORM\Column]
-  #[Assert\NotBlank(message: "Le mot de passe ne peut pas etre vide")]
   #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moin {{Limit}} characteres", max: 255, maxMessage: "Votre mot de passe doit contenir au maximum {{limit}} characteres")]
   #[Assert\Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/', message: "Le mot de passe doit contenir au moin une majuscule, une minuscule, un chiffre et un caractere special")]
-
   private ?string $password = null;
 
   #[ORM\Column(length: 255)]

@@ -3,11 +3,12 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
+  {% if app.user %}
+    
     <div class="text-center">
         Bienvenue sur notre page d'accueil
     </div>
     
-    {{ dump() }}
     {{ include('home/afterSearchSearch.html.twig') }}
   </form>
 
@@ -52,8 +53,11 @@
 
     <a href="{{ path('app_movie_new') }}">Enregistez un nouveau Film</a>
     </div>
-
-  
+    {% else %}
+      <div class="text-center">
+          <a href="{{ path('app_login') }}">Connectez-vous</a> ou <a href="{{ path('app_register') }}">Inscrivez-vous</a>
+      </div>
+  {% endif %}
 
 
 {% endblock %}

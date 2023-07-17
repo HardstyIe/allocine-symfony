@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
-
+  
 {% block title %}Accueil{% endblock %}
-
-{% block body %}
+  
+  {% block body %}
+    {% if app.user %}
     <div class="text-center">
         Bienvenue sur notre page d'accueil
     </div>
@@ -53,6 +54,55 @@
 
     </div>
 
+<!-- Exemple de code JavaScript dans votre vue Twig -->
+<script>
+    // Fonction pour effectuer la requête AJAX et afficher les résultats
+    function performSearch() {
+        const query = document.getElementById('searchQuery').value;
+        const actorIds = getSelectedIds('selectedActors');
+        const realisatorIds = getSelectedIds('selectedRealisators');
+        const categoryIds = getSelectedIds('selectedCategories');
 
+        // Effectuer la requête AJAX vers l'URL de recherche définie dans votre contrôleur
+        fetch(`/movies/search?query=${query}&actorIds=${actorIds}&realisatorIds=${realisatorIds}&categoryIds=${categoryIds}`)
+            .then(response => response.json())
+            .then(data => {
+                // Traiter les données JSON reçues et afficher les résultats sur la page
+                const resultsContainer = document.getElementById('resultsContainer');
+                resultsContainer.innerHTML = '';
+
+                data.forEach(movie => {
+                    const movieElement = document.createElement('div');
+                    movieElement.textContent = `${movie.title} (${movie.releaseYear})`;
+                    resultsContainer.appendChild(movieElement);
+                });
+            });
+    }
+
+    // Fonction pour obtenir les IDs des éléments sélectionnés dans une liste déroulante
+    function getSelectedIds(listId) {
+        const selectedIds = Array.from(document.querySelectorAll(`#${listId} option:checked`))
+            .map(option => option.value)
+            .join(',');
+        return selectedIds;
+    }
+
+    // Écouter l'événement de soumission du formulaire de recherche
+    document.getElementById('searchForm').addEventListener('submit', event => {
+        event.preventDefault();
+        performSearch();
+    });
+
+    // Appeler la fonction de recherche initiale au chargement de la page
+    performSearch();
+</script>
+  
+      {% else %}
+      <div class="text-center">
+          <a href="{{ path('app_login') }}">Connectez-vous</a> ou <a href="{{ path('app_register') }}">Inscrivez-vous</a>
+      </div>
+
+
+{% endif %}
 
 {% endblock %}
