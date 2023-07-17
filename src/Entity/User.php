@@ -3,209 +3,170 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column]
+  private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+  #[ORM\Column(length: 180, unique: true)]
+  #[Assert\NotBlank(message: "L'email ne peut pas etre vide")]
+  #[Assert\Email(message: "L'email n'est pas valide")]
+  #[Assert\Regex(pattern: '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]{2,}\.[a-zA-Z]{2,4}$/', message: "L'email n'est pas valide")]
 
-    #[ORM\Column]
-    private array $roles = [];
+  private ?string $email = null;
 
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
+  #[ORM\Column]
+  private array $roles = [];
 
-    #[ORM\Column(length: 255)]
-    private ?string $firstName = null;
+  /**
+   * @var string The hashed password
+   */
+  #[ORM\Column]
+  #[Assert\NotBlank(message: "Le mot de passe ne peut pas etre vide")]
+  #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moin {{Limit}} characteres", max: 255, maxMessage: "Votre mot de passe doit contenir au maximum {{limit}} characteres")]
+  #[Assert\Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/', message: "Le mot de passe doit contenir au moin une majuscule, une minuscule, un chiffre et un caractere special")]
 
-    #[ORM\Column(length: 255)]
-    private ?string $lastName = null;
+  private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $profilPicture = null;
+  #[ORM\Column(length: 255)]
+  #[Assert\NotBlank(message: "Le prénom ne peut pas etre vide")]
+  #[Assert\Length(min: 3, minMessage: " Le prénom doit Contenir au moin {{Limit}} characteres", max: 255, maxMessage: "Votre nom doit contenir au maximum {{limit}} characteres")]
+  #[Assert\Regex(pattern: '/^[a-zA-Z0-9]+$/', message: "Le prénom ne peut contenir que des lettres et des chiffres")]
 
-    #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'users')]
-    private Collection $games;
+  private ?string $firstName = null;
 
-    #[ORM\ManyToMany(targetEntity: Console::class, inversedBy: 'users')]
-    private Collection $consoles;
+  #[ORM\Column(length: 255)]
+  #[Assert\NotBlank(message: "Le nom ne peut pas etre vide")]
+  #[Assert\Length(min: 3, minMessage: " Le nom doit Contenir au moin {{Limit}} characteres", max: 255, maxMessage: "Votre nom doit contenir au maximum {{limit}} characteres")]
+  #[Assert\Regex(pattern: '/^[a-zA-Z0-9]+$/', message: "Le nom ne peut contenir que des lettres et des chiffres")]
 
-    public function __construct()
-    {
-        $this->games = new ArrayCollection();
-        $this->consoles = new ArrayCollection();
-    }
+  private ?string $lastName = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  #[ORM\Column(length: 255, nullable: true)]
+  #[Assert\Image(
+    mimeTypes: [
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp'
+    ],
+    mimeTypesMessage: "Le format de l'image n'est pas valide",
+    maxSize: '2M',
+    maxSizeMessage: "L'image ne doit pas depasser {{limit}}"
+  )]
+  private ?string $profilPicture = null;
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
 
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+  public function getId(): ?int
+  {
+    return $this->id;
+  }
 
-        return $this;
-    }
+  public function getEmail(): ?string
+  {
+    return $this->email;
+  }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
+  public function setEmail(string $email): static
+  {
+    $this->email = $email;
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+    return $this;
+  }
 
-        return array_unique($roles);
-    }
+  /**
+   * A visual identifier that represents this user.
+   *
+   * @see UserInterface
+   */
+  public function getUserIdentifier(): string
+  {
+    return (string) $this->email;
+  }
 
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
+  /**
+   * @see UserInterface
+   */
+  public function getRoles(): array
+  {
+    $roles = $this->roles;
+    // guarantee every user at least has ROLE_USER
+    $roles[] = 'ROLE_USER';
 
-        return $this;
-    }
+    return array_unique($roles);
+  }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
+  public function setRoles(array $roles): static
+  {
+    $this->roles = $roles;
 
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
+    return $this;
+  }
 
-        return $this;
-    }
+  /**
+   * @see PasswordAuthenticatedUserInterface
+   */
+  public function getPassword(): string
+  {
+    return $this->password;
+  }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
+  public function setPassword(string $password): static
+  {
+    $this->password = $password;
 
-    public function getFirstName(): ?string
-    {
-        return $this->firstName;
-    }
+    return $this;
+  }
 
-    public function setFirstName(string $firstName): static
-    {
-        $this->firstName = $firstName;
+  /**
+   * @see UserInterface
+   */
+  public function eraseCredentials(): void
+  {
+    // If you store any temporary, sensitive data on the user, clear it here
+    // $this->plainPassword = null;
+  }
 
-        return $this;
-    }
+  public function getFirstName(): ?string
+  {
+    return $this->firstName;
+  }
 
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
+  public function setFirstName(string $firstName): static
+  {
+    $this->firstName = $firstName;
 
-    public function setLastName(string $lastName): static
-    {
-        $this->lastName = $lastName;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getLastName(): ?string
+  {
+    return $this->lastName;
+  }
 
-    public function getProfilPicture(): ?string
-    {
-        return $this->profilPicture;
-    }
+  public function setLastName(string $lastName): static
+  {
+    $this->lastName = $lastName;
 
-    public function setProfilPicture(?string $profilPicture): static
-    {
-        $this->profilPicture = $profilPicture;
+    return $this;
+  }
 
-        return $this;
-    }
+  public function getProfilPicture(): ?string
+  {
+    return $this->profilPicture;
+  }
 
-    /**
-     * @return Collection<int, Game>
-     */
-    public function getGames(): Collection
-    {
-        return $this->games;
-    }
+  public function setProfilPicture(?string $profilPicture): static
+  {
+    $this->profilPicture = $profilPicture;
 
-    public function addGame(Game $game): static
-    {
-        if (!$this->games->contains($game)) {
-            $this->games->add($game);
-            $game->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): static
-    {
-        if ($this->games->removeElement($game)) {
-            $game->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Console>
-     */
-    public function getConsoles(): Collection
-    {
-        return $this->consoles;
-    }
-
-    public function addConsole(Console $console): static
-    {
-        if (!$this->consoles->contains($console)) {
-            $this->consoles->add($console);
-        }
-
-        return $this;
-    }
-
-    public function removeConsole(Console $console): static
-    {
-        $this->consoles->removeElement($console);
-
-        return $this;
-    }
+    return $this;
+  }
 }

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Realisator index{% endblock %}
+
+{% block body %}
+    <h1>Realisator index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for realisator in realisators %}
+            <tr>
+                <td>{{ realisator.id }}</td>
+                <td>{{ realisator.firstName }}</td>
+                <td>{{ realisator.lastName }}</td>
+                <td>
+                    <a href="{{ path('app_realisator_show', {'id': realisator.id}) }}">show</a>
+                    <a href="{{ path('app_realisator_edit', {'id': realisator.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_realisator_new') }}">Create new</a>
+{% endblock %}

@@ -2,17 +2,5 @@
 
 {% block body %}
 
-    {{ dump(app.user) }}
-
-    <h2>{{ app.user.firstName }} {{ app.user.lastName }}</h2>
-
-    <h3>Mes Consoles : </h3>
-    <ul>
-        {% for console in app.user.consoles %}
-            <li>{{ console }} <a href="{{ path('app_remove_console', {'id':console.id}) }}">Supprimer</a></li>
-        {% else %}
-            <div>Aucune console dans votre collection</div>
-        {% endfor %}
-    </ul>
 
 {% endblock %}

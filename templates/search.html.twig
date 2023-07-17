@@ -1,0 +1,55 @@
+<form action="{{ path('search_movie') }}" method="get">
+    <div>
+        <input type="text" name="query" placeholder="Rechercher par titre">
+        <!-- Ajoutez ici le champ pour les acteurs -->
+        <select name="actors">
+            <option value="">Tous les acteurs</option>
+            {% for actor in actors %}
+                <option value="{{ actor.id }}">{{ actor.firstName }} {{ actor.lastName }}</option>
+            {% endfor %}
+        </select>
+        <!-- Ajoutez ici le champ pour les réalisateurs -->
+        <select name="realisator">
+            <option value="">Tous les réalisateurs</option>
+            {% for realisator in realisators %}
+                <option value="{{ realisator.id }}">{{ realisator.firstName }} {{ realisator.lastName }}</option>
+            {% endfor %}
+        </select>
+        <!-- Ajoutez ici le champ pour les catégories -->
+        <select name="categories">
+            <option value="">Toutes les catégories</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Rechercher</button>
+    </div>
+</form>
+
+{# div qui affiche le resultat #}
+<div id="search-results"></div>
+
+
+
+<script>
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value;
+        if (query.length >= 3) { // Pour éviter des recherches inutiles à chaque caractère
+            fetch(`/movie/search?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Mettez à jour la liste des résultats sur la page
+                    const resultsHTML = data.map(movie => `<div>${movie.title}</div>`).join('');
+                    searchResults.innerHTML = resultsHTML;
+                })
+                .catch(error => {
+                    console.error('Une erreur s\'est produite lors de la recherche :', error);
+                });
+        } else {
+            searchResults.innerHTML = ''; // Réinitialiser les résultats si la recherche est vide
+        }
+    });
+</script>
