@@ -4,11 +4,8 @@
   
   {% block body %}
     {% if app.user %}
-    <div class="text-center">
-        Bienvenue sur notre page d'accueil
-    </div>
     
-    {{ dump() }}
+    
     {{ include('home/search.html.twig') }}
   </form>
 
